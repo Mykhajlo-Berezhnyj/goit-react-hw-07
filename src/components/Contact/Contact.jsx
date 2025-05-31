@@ -1,24 +1,19 @@
 import { FaUser, FaPhone, FaEdit } from 'react-icons/fa';
 import css from './Contact.module.css';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  deleteContact,
-  updateContact,
-  startEditing,
-  stopEditing,
-} from '../../redux/contactsSlice';
+import { startEditing, stopEditing } from '../../redux/contactsSlice';
+import { deleteContact, updateContact } from '../../redux/contactsOps';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import { useEffect, useState, useRef } from 'react';
 import { validationContact } from '../utils/validationContact';
 import { FaCheck } from 'react-icons/fa';
 import { findDuplicateByNumber } from '../findDuplicateByNumber';
+import { selectEditingContactId } from '../../redux/contactsSlice';
 
 export default function Contact({ contact }) {
   const dispatch = useDispatch();
-  const editingContactId = useSelector(
-    state => state.contacts.editingContactId,
-  );
+  const editingContactId = useSelector(selectEditingContactId);
   const [editName, setEditName] = useState(contact.name);
   const [editNumber, setEditNumber] = useState(contact.number);
   const [focusedField, setFocusedField] = useState(null);
@@ -108,13 +103,6 @@ export default function Contact({ contact }) {
     }
   }, [editingContactId, contact.id, focusedField]);
 
-  // useEffect(() => {
-  //   if (focusedField === 'name' && nameRef.current) {
-  //     nameRef.current.focus();
-  //   } else if (focusedField === 'number' && numberRef.current) {
-  //     numberRef.current.focus();
-  //   }
-  // }, [focusedField]);
 
   const handleSave = () => {
     const validationErrors = validationContact({
@@ -146,7 +134,7 @@ export default function Contact({ contact }) {
               dispatch(deleteContact(duplicate.id));
               dispatch(
                 updateContact({
-                  id: contact.id,
+                  contactId: contact.id,
                   name: editName.trim(),
                   number: editNumber.trim(),
                 }),
@@ -171,7 +159,7 @@ export default function Contact({ contact }) {
 
     dispatch(
       updateContact({
-        id: contact.id,
+        contactId: contact.id,
         name: editName.trim(),
         number: editNumber.trim(),
       }),

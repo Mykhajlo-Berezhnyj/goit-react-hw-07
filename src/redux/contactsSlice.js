@@ -1,31 +1,32 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, createSelector } from '@reduxjs/toolkit';
+import {
+  fetchContacts,
+  addContact,
+  deleteContact,
+  updateContact,
+} from './contactsOps';
+import { selectNameFilter, selectModeFilter } from './filtersSlice';
+import { normalize } from '../components/utils/normalize';
 
-const slice = createSlice({
+
+const handlePending = state => {
+  state.isLoading = true;
+};
+
+const handleRejected = (state, action) => {
+  state.isLoading = false;
+  state.error = action.payload;
+};
+
+const contactSlice = createSlice({
   name: 'contacts',
   initialState: {
-    items: [
-      { id: 'id-1', name: 'Rosie Simpson', number: '459 - 12 - 56' },
-      { id: 'id-2', name: 'Hermione Kline', number: '443 - 89 - 12' },
-      { id: 'id-3', name: 'Eden Clements', number: '645 - 17 - 79' },
-      { id: 'id-4', name: 'Annie Copeland', number: '227 - 91 - 26' },
-    ],
+    items: [],
     editingContactId: null,
+    isLoading: false,
+    error: null,
   },
-  reducers: {
-    addContact(state, action) {
-      state.items.push(action.payload);
-    },
-    deleteContact(state, action) {
-      state.items = state.items.filter(item => item.id !== action.payload);
-    },
-    updateContact(state, action) {
-      const { id, name, number } = action.payload;
-      const contact = state.items.find(item => item.id === id);
-      if (contact) {
-        contact.name = name;
-        contact.number = number;
-      }
-    },
+   reducers: {
     startEditing(state, action) {
       state.editingContactId = action.payload;
     },
@@ -33,13 +34,81 @@ const slice = createSlice({
       state.editingContactId = null;
     },
   },
+  extraReducers: builder => {
+    builder
+      .addCase(fetchContacts.pending, handlePending)
+      .addCase(fetchContacts.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.error = null;
+        state.items = action.payload;
+      })
+      .addCase(fetchContacts.rejected, handleRejected)
+      .addCase(addContact.pending, handlePending)
+      .addCase(addContact.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.error = null;
+        state.items.push(action.payload);
+      })
+      .addCase(addContact.rejected, handleRejected)
+      .addCase(deleteContact.pending, handlePending)
+      .addCase(deleteContact.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.error = null;
+        state.items = state.items.filter(item => item.id !== action.payload.id);
+      })
+      .addCase(deleteContact.rejected, handleRejected)
+      .addCase(updateContact.pending, handlePending)
+      .addCase(updateContact.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.error = null;
+        const { id, name, number } = action.payload;
+        const contact = state.items.find(item => item.id === id);
+        if (contact) {
+          contact.name = name;
+          contact.number = number;
+        }
+      })
+      .addCase(updateContact.rejected, handleRejected);
+  },
 });
 
-export const {
-  addContact,
-  deleteContact,
-  updateContact,
-  startEditing,
-  stopEditing,
-} = slice.actions;
-export default slice.reducer;
+export default contactSlice.reducer;
+
+export const {startEditing, stopEditing} = contactSlice.actions;
+
+// Selectors
+
+export const selectContacts = state => state.contacts.items;
+
+export const selectIsLoading = state => state.contacts.isLoading;
+
+export const selectError = state => state.contacts.error;
+
+export const selectEditingContactId = state => state.contacts.editingContactId;
+
+export const selectFilteredContacts = createSelector(
+  [selectContacts, selectNameFilter, selectModeFilter],
+  (contacts, name, mode) => {
+    const query = name.toLowerCase();
+    const normalizedQuery = normalize(name);
+    const isNumeric = Number.isFinite(Number(normalizedQuery));
+
+    return contacts.filter(contact => {
+      const normalizedNumber = normalize(contact.number);
+      switch (mode) {
+        case 'name':
+          return contact.name.toLowerCase().includes(query);
+        case 'number':
+          return normalizedNumber.includes(normalizedQuery);
+        case 'all':
+        default:
+          return (
+            contact.name.toLowerCase().includes(query) ||
+            (isNumeric && normalizedNumber.includes(normalizedQuery))
+          );
+      }
+    });
+  },
+);
+
+

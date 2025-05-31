@@ -4,8 +4,16 @@ import ContactForm from './components/ContactForm/ContactForm';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import './App.css';
 import { Toaster } from 'react-hot-toast';
+import { useDispatch } from 'react-redux';
+import { useEffect } from 'react';
+import { fetchContacts } from './redux/contactsOps';
 
 function App() {
+  const dispatch = useDispatch();
+useEffect(()=> {
+  dispatch(fetchContacts());
+}, [dispatch])
+
   return (
     <div className="container">
       <Toaster position="top-left" />

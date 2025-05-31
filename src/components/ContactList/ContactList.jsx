@@ -1,33 +1,22 @@
 import css from './ContactList.module.css';
 import Contact from '../Contact/Contact';
 import { useSelector } from 'react-redux';
+import {
+  selectFilteredContacts,
+  selectIsLoading,
+  selectError,
+} from '../../redux/contactsSlice';
 
 export default function ContactList() {
-  const { name, mode } = useSelector(state => state.filters);
-  const contacts = useSelector(state => state.contacts.items || []);
-
-  const normalize = str => str.replace(/[-*/.,!?;:()\s]/g, '');
-  const isNumeric = Number.isFinite(Number(normalize(name)));
-
-  const filteredContacts = contacts.filter(contact => {
-    const query = name.toLowerCase();
-    switch (mode) {
-      case 'name':
-        return contact.name.toLowerCase().includes(query);
-      case 'number':
-        return normalize(contact.number).includes(normalize(name));
-      case 'all':
-      default:
-        return (
-          contact.name.toLowerCase().includes(query) ||
-          (isNumeric && normalize(contact.number).includes(normalize(name)))
-        );
-    }
-  });
+  const filteredContacts = useSelector(selectFilteredContacts) || [];
+  const isLoading = useSelector(selectIsLoading);
+  const error = useSelector(selectError);
 
   return (
     <div>
-      {name ? (
+      {isLoading && <p>Loading</p>}
+      {error && <p>error</p>}
+      {filteredContacts.length > 0 ? (
         <p className={css.infoQuery}>
           Found {filteredContacts.length}{' '}
           {filteredContacts.length === 1 ? 'contact' : 'contacts'}

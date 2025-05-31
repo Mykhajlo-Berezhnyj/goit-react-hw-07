@@ -5,7 +5,7 @@ import * as Yup from 'yup';
 import { isValidPhoneNumber } from 'libphonenumber-js';
 import css from './ContactForm.module.css';
 import { useDispatch } from 'react-redux';
-import { addContact, updateContact } from '../../redux/contactsSlice';
+import { addContact, updateContact } from '../../redux/contactsOps';
 import { useSelector } from 'react-redux';
 import { confirmAlert } from 'react-confirm-alert';
 import { toast } from 'react-hot-toast';
