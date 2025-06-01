@@ -2,10 +2,10 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  max-width: 20em;
+  width: 260px;
   justify-content: space-between;
   background-color: beige;
-  padding: 0.8em 1em;
+  padding: 0.6em;
   border-radius: 1em;
   margin-bottom: 10px;
   border: 1px solid black;
@@ -17,22 +17,45 @@
   flex-direction: column;
   gap: 0.6em;
   flex-wrap: wrap;
+  flex-shrink: 1;
 }
 
 .contact-item {
   display: flex;
   align-items: center;
-  gap: 0.8em;
+  gap: 0.6em;
+  cursor: pointer;
+  flex-wrap: nowrap;
+  width: 180px;
 }
 
 .icon {
   color: black;
+  flex-shrink: 0;
 }
 
 .contact-data {
+  display: block;
   margin: 0;
   font-weight: 500;
   color: #333;
+  flex-grow: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+  position: relative;
+
+  &:hover .scrolling-text {
+    animation: marquee 4s linear infinite;
+  }
+}
+
+.scrolling-text {
+  display: inline-block;
+  white-space: nowrap;
+  transform: translate(0, 0);
+  will-change: transform;
 }
 
 .btn-delete,
@@ -45,6 +68,12 @@
   cursor: pointer;
   transition: background-color 0.3s ease, scale 0.3s ease;
   scale: 1;
+}
+
+.btn-delete {
+  flex-shrink: 0;
+  margin-left: auto;
+  padding: 4px;
 }
 
 .btn-delete:hover,
@@ -61,14 +90,14 @@
 .editContact {
   display: flex;
   flex-direction: row;
-  gap: 10px;
+  gap: 6px;
 }
 
 .editContainer {
   display: flex;
-  gap: 10px;
+  gap: 6px;
   justify-content: space-between;
-  align-items: ;
+  align-items: center;
 }
 
 .editIcon {
@@ -78,6 +107,12 @@
   opacity: 0.6;
   transition: opacity 0.2s;
   pointer-events: none;
+  flex-shrink: 0;
+
+  &:hover {
+    color: orangered;
+    opacity: 1;
+  }
 }
 
 .contact-item {
@@ -85,8 +120,7 @@
 }
 
 .contact-item:hover .editIcon {
-  color: orangered;
-  opacity: 1;
+  pointer-events: auto;
 }
 
 .btnEdit {
@@ -118,4 +152,13 @@
 .alert-green:hover {
   background-color: rgba(42, 230, 35, 0.87);
   color: black;
+}
+
+@keyframes marquee {
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(-50%, 0);
+  }
 }

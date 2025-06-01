@@ -103,7 +103,6 @@ export default function Contact({ contact }) {
     }
   }, [editingContactId, contact.id, focusedField]);
 
-
   const handleSave = () => {
     const validationErrors = validationContact({
       name: editName,
@@ -212,10 +211,15 @@ export default function Contact({ contact }) {
               className={css['contact-data']}
               onDoubleClick={evt => handleEditing(evt, 'name')}
             >
-              {editingContactId === contact.id ? editName : contact.name}
+              <span className={css['scrolling-text']}>
+                {editingContactId === contact.id ? editName : contact.name}
+              </span>
             </p>
           )}{' '}
-          <FaEdit className={css.editIcon} />
+          <FaEdit
+            className={css.editIcon}
+            onClick={evt => handleEditing(evt, 'name')}
+          />
         </div>
         <div className={css['contact-item']}>
           <FaPhone className={css.icon} />
@@ -245,7 +249,10 @@ export default function Contact({ contact }) {
               {editingContactId === contact.id ? editNumber : contact.number}
             </p>
           )}
-          <FaEdit className={css.editIcon} />
+          <FaEdit
+            className={css.editIcon}
+            onClick={evt => handleEditing(evt, 'number')}
+          />
         </div>
       </div>
       {editingContactId === contact.id ? (

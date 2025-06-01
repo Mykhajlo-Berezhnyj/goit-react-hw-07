@@ -141,7 +141,7 @@ export default function ContactForm() {
               className={
                 isModal
                   ? `${css.formModal} ${exitAnim ? css['formModal-exit'] : ''}`
-                  : css.form
+                  : `${css.form} ${exitAnim ? css['form-exit'] : ''}`
               }
               onClick={
                 !isModal

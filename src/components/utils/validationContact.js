@@ -9,7 +9,7 @@ export const validationContact = ({ name, number }) => {
   } else if (name.trim().length > 50) {
     newErrors.name = 'Name is too long';
   }
-  if (!isValidPhoneNumber(number, 'UA')) {
+  if (!isValidPhoneNumber(number)) {
     newErrors.number = 'Invalid phone number';
   }
   return newErrors;

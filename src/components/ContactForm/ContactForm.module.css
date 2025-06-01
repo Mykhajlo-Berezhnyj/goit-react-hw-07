@@ -26,16 +26,12 @@
 
 .overlay {
   position: relative;
-  /* display: flex;
-  justify-content: flex-start;
-  align-items: flex-start; */
 }
 
 .allContact {
   display: inline-block;
-  margin: 30px;
-  margin-bottom: 0;
-  margin-left: 0;
+  margin-right: 30px;
+  margin-top: 16px;
   font-size: 1.2em;
   font-weight: 600;
 }
@@ -52,6 +48,9 @@
   &:hover {
     background-color: lightgreen;
   }
+}
+
+.form-exit {
 }
 
 .formModal {
@@ -74,6 +73,10 @@
   @media screen and (min-width: 768px) {
     width: 20em;
   }
+}
+
+.formModal-exit {
+  animation: modalOut 0.3s ease-in forwards;
 }
 
 .wrap {
@@ -221,27 +224,6 @@
     left: 50%;
     opacity: 1;
     transform: translate(-50%, -50%) scale(1);
-  }
-}
-
-.formModal-exit {
-  display: flex;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 16em;
-  background-color: beige;
-  flex-direction: column;
-  justify-content: center;
-  text-align: center;
-  border: 2px solid black;
-  border-radius: 1em;
-  padding: 1.5em;
-  animation: modalOut 0.3s ease-in forwards;
-
-  @media screen and (min-width: 768px) {
-    width: 20em;
   }
 }
 
