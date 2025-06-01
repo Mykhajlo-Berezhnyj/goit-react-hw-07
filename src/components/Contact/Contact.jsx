@@ -10,6 +10,7 @@ import { validationContact } from '../utils/validationContact';
 import { FaCheck } from 'react-icons/fa';
 import { findDuplicateByNumber } from '../findDuplicateByNumber';
 import { selectEditingContactId } from '../../redux/contactsSlice';
+import { FaTimes } from 'react-icons/fa';
 
 export default function Contact({ contact }) {
   const dispatch = useDispatch();
@@ -190,21 +191,29 @@ export default function Contact({ contact }) {
           <FaUser className={css.icon} />
           {editingContactId === contact.id && focusedField === 'name' ? (
             <div className={css.editContact}>
-              <input
-                ref={nameRef}
-                type="text"
-                name=""
-                aria-label="Edit contact name"
-                value={editName}
-                onChange={handleNameChange}
-                onKeyDown={handleKey}
-                className={error.name ? css.inputError : css.input}
-              />
+              <div className={css.inputWrapper}>
+                <input
+                  ref={nameRef}
+                  type="text"
+                  aria-label="Edit contact name"
+                  value={editName}
+                  onChange={handleNameChange}
+                  onKeyDown={handleKey}
+                  className={error.name ? css.inputError : css.input}
+                />
+                <FaTimes
+                  className={css.iconClear}
+                  onClick={() => {
+                    setEditName('');
+                    nameRef.current?.focus();
+                  }}
+                />
+              </div>
               {error.name ? (
                 <p className={css.error}>{error.name}</p>
               ) : (
                 <FaCheck className={css.validIcon} />
-              )}
+              )}{' '}
             </div>
           ) : (
             <p
@@ -215,26 +224,38 @@ export default function Contact({ contact }) {
                 {editingContactId === contact.id ? editName : contact.name}
               </span>
             </p>
-          )}{' '}
-          <FaEdit
-            className={css.editIcon}
-            onClick={evt => handleEditing(evt, 'name')}
-          />
+          )}
+          {!(editingContactId === contact.id && focusedField === 'name') && (
+            <FaEdit
+              className={css.editIcon}
+              onClick={evt => handleEditing(evt, 'name')}
+              title="Edit name"
+            />
+          )}
         </div>
         <div className={css['contact-item']}>
           <FaPhone className={css.icon} />
           {editingContactId === contact.id && focusedField === 'number' ? (
             <div className={css.editContact}>
-              <input
-                ref={numberRef}
-                type="text"
-                name="contact-number"
-                aria-label="Edit contact number"
-                value={editNumber}
-                onChange={handleNumberChange}
-                onKeyDown={handleKey}
-                className={error.number ? css.inputError : css.input}
-              />
+              <div className={css.inputWrapper}>
+                <input
+                  ref={numberRef}
+                  type="text"
+                  name="contact-number"
+                  aria-label="Edit contact number"
+                  value={editNumber}
+                  onChange={handleNumberChange}
+                  onKeyDown={handleKey}
+                  className={error.number ? css.inputError : css.input}
+                />
+                <FaTimes
+                  className={css.iconClear}
+                  onClick={() => {
+                    setEditNumber('');
+                    numberRef.current?.focus();
+                  }}
+                />
+              </div>
               {error.number ? (
                 <p className={css.error}>{error.number}</p>
               ) : (
@@ -249,10 +270,13 @@ export default function Contact({ contact }) {
               {editingContactId === contact.id ? editNumber : contact.number}
             </p>
           )}
-          <FaEdit
-            className={css.editIcon}
-            onClick={evt => handleEditing(evt, 'number')}
-          />
+          {!(editingContactId === contact.id && focusedField === 'number') && (
+            <FaEdit
+              className={css.editIcon}
+              onClick={evt => handleEditing(evt, 'number')}
+              title="Edit number"
+            />
+          )}
         </div>
       </div>
       {editingContactId === contact.id ? (

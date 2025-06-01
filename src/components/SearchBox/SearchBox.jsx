@@ -2,6 +2,7 @@ import css from './SearchBox.module.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { changeFilter, changeFilterMode } from '../../redux/filtersSlice';
 import { useDebouncedCallback } from 'use-debounce';
+import { useEffect } from 'react';
 
 export default function SearchBox() {
   const dispatch = useDispatch();
@@ -11,10 +12,16 @@ export default function SearchBox() {
     dispatch(changeFilter(value));
   }, 300);
 
+  useEffect(() => {
+    return () => {
+      debounceChangeFilter.cancel();
+    };
+  }, [debounceChangeFilter]);
+
   return (
     <div className={css['search-box']}>
       <p className={css['search-p']}>
-        Find contacts by {mode === 'all' ? 'by name and number' : mode}
+        Find contacts by {mode === 'all' ? 'name and number' : mode}
       </p>
       <div className={css['search-wrap']}>
         <input
@@ -27,7 +34,7 @@ export default function SearchBox() {
         />
         <select
           name="filter"
-          id="1"
+          id="filter-mode-select"
           value={mode}
           aria-label="switch search contact"
           className={css['search-select']}

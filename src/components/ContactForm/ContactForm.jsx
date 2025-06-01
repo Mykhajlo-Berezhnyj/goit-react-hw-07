@@ -74,7 +74,6 @@ export default function ContactForm() {
     if (!existinContact) {
       dispatch(
         addContact({
-          id: nanoid(),
           name: values.name,
           number: values.number,
         }),
@@ -119,7 +118,7 @@ export default function ContactForm() {
     setTimeout(() => {
       setIsModal(false);
       setExitAnim(false);
-    }, 300);
+    }, 100);
   };
 
   return (
@@ -174,7 +173,7 @@ export default function ContactForm() {
                   type="text"
                   name="name"
                   placeholder="Enter name"
-                  arial-label="Enter name"
+                  aria-label="Enter name"
                   id={nameFieldId}
                 />
                 {values.name && (
@@ -199,7 +198,7 @@ export default function ContactForm() {
                   name="number"
                   id={numberFieldId}
                   placeholder="Enter number"
-                  arial-label="Enter number"
+                  aria-label="Enter number"
                 />
                 {values.number && (
                   <FaTimes
